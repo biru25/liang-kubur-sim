@@ -1,0 +1,7 @@
+name = "liang-kubur-sim"
+pages_build_output_dir = "public"
+compatibility_date = "2025-04-01"
+
+[vars]
+# Non-secret defaults (override in dashboard if needed)
+DEEPGRAM_TTS_MODEL = "aura-2-thalia-en"

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Simulasi Liang Kubur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="grain" aria-hidden="true"></div>
+  <div id="vignette" aria-hidden="true"></div>
+
+  <header class="top-bar">
+    <span class="brand">Simulasi Liang Kubur</span>
+    <span id="phase-label" class="phase-label">Persiapan</span>
+    <span id="dg-status" class="dg-pill" title="Status Deepgram">Voice: …</span>
+  </header>
+
+  <main id="stage" class="stage">
+    <section class="panel active" data-scene="intro">
+      <p class="kicker">Pendidikan iman</p>
+      <h1>Perjalanan setelah kematian</h1>
+      <p class="lead">
+        Pengalaman interaktif berdasarkan keyakinan umum Ahlus Sunnah: kegelapan kubur,
+        pertanyaan Munkar dan Nakir, dan harapan rahmat Allah. Bukan pengganti ilmu agama resmi.
+      </p>
+      <div class="card-soft">
+        <p><strong>Catatan:</strong> Konten dapat menegangkan. Gunakan untuk muhasabah dan belajar jawaban yang diajarkan ulama.</p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn primary" data-action="start">Mulai simulasi</button>
+        <button type="button" class="btn ghost" data-action="learn">Pelajari jawaban dulu</button>
+      </div>
+    </section>
+
+    <section class="panel" data-scene="learn">
+      <h2>Jawaban yang diamalkan</h2>
+      <ul class="answer-list">
+        <li><span class="ar">مَنْ رَبُّكَ؟</span> Siapa Tuhanmu? <strong>Rabbiyallah</strong> (Tuhanku Allah)</li>
+        <li><span class="ar">مَا دِينُكَ؟</span> Apa agamamu? <strong>Islam</strong></li>
+        <li><span class="ar">مَنْ نَبِيُّكَ؟</span> Siapa nabimu? <strong>Muhammad</strong> shallallahu alaihi wa sallam</li>
+      </ul>
+      <p class="hint">Anda bisa menjawab dengan suara (Deepgram) atau ketik di bawah saat pertanyaan muncul.</p>
+      <button type="button" class="btn primary" data-action="to-burial">Lanjut ke penguburan</button>
+    </section>
+
+    <section class="panel" data-scene="burial">
+      <div class="cinematic">
+        <div class="earth-layer"></div>
+        <p class="cinematic-text" id="burial-caption">Tubuh diturunkan ke liang kubur…</p>
+      </div>
+      <button type="button" class="btn primary hidden" id="btn-enter-grave" data-action="enter-grave">Masuk ke kegelapan</button>
+    </section>
+
+    <section class="panel" data-scene="darkness">
+      <h2 class="glow">Kegelapan kubur</h2>
+      <p id="dark-text" class="lead narrow"></p>
+      <div class="meter-wrap">
+        <label>Ketegangan (simbolis)</label>
+        <div class="meter"><div id="tension-bar" class="meter-fill"></div></div>
+      </div>
+      <button type="button" class="btn primary" data-action="angels-come">Kedatangan penanya</button>
+    </section>
+
+    <section class="panel" data-scene="question">
+      <div class="angel-card">
+        <p class="angel-tag">Munkar &amp; Nakir</p>
+        <p id="q-ar" class="ar big"></p>
+        <p id="q-id" class="q-id"></p>
+      </div>
+      <div class="voice-ui">
+        <button type="button" class="btn mic" id="btn-mic" title="Jawab dengan suara">
+          <span class="mic-icon"></span>
+          <span id="mic-label">Tahan untuk jawab</span>
+        </button>
+        <p id="transcript" class="transcript"></p>
+      </div>
+      <label class="field-label" for="answer-input">Atau ketik jawaban</label>
+      <input id="answer-input" class="field" type="text" autocomplete="off" placeholder="Contoh: Rabbiyallah" />
+      <div class="actions">
+        <button type="button" class="btn primary" id="btn-submit-answer">Kirim jawaban</button>
+        <button type="button" class="btn ghost" id="btn-hint">Petunjuk</button>
+      </div>
+      <p id="feedback" class="feedback" role="status"></p>
+    </section>
+
+    <section class="panel" data-scene="barzakh">
+      <h2>Barzakh</h2>
+      <p id="barzakh-text" class="lead narrow"></p>
+      <div id="barzakh-visual" class="barzakh-visual"></div>
+      <button type="button" class="btn primary" data-action="finish">Selesai &amp; muhasabah</button>
+    </section>
+
+    <section class="panel" data-scene="outro">
+      <h2>Muhasabah</h2>
+      <p class="lead narrow">
+        Simulasi ini mengingatkan bahwa persiapan sebelum mati adalah amal saleh, ilmu yang benar,
+        dan keteguhan iman. Semoga Allah memberi kita husnul khatimah.
+      </p>
+      <ul id="score-list" class="score-list"></ul>
+      <button type="button" class="btn primary" data-action="restart">Ulangi simulasi</button>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Suara malaikat (Edge Indonesia) &amp; transkripsi jawaban (Deepgram)</span>
+    <span id="foot-note"></span>
+  </footer>
+
+  <audio id="voice-audio" preload="none"></audio>
+  <audio id="backsound-audio" preload="auto" loop></audio>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
