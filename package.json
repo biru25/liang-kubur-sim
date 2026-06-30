@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "pages:build": "node -e \"console.log('Cloudflare Pages: static public/ + functions/')\"",
     "deploy:cf": "wrangler pages deploy . --project-name=liang-kubur-sim"
   },
   "dependencies": {

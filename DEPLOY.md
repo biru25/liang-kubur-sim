@@ -1,18 +1,27 @@
 # Deploy — GitHub + Cloudflare Pages
 
+## ⚠️ Build gagal: `npx wrangler deploy`
+
+Kalau log Cloudflare berisi **Deploy command: `npx wrangler deploy`** → itu **salah** (itu perintah **Workers**, bukan Pages).
+
+**Perbaikan di dashboard** (Workers & Pages → proyek → Settings → Builds):
+
+| Field | Nilai yang benar |
+|--------|------------------|
+| **Build command** | *(kosong)* atau `npm run pages:build` |
+| **Build output directory** | `public` |
+| **Root directory** | `/` |
+| **Deploy command** | **KOSONG / hapus** — jangan `wrangler deploy` |
+
+Simpan → **Retry deployment**. Pages otomatis pakai folder `functions/` + static `public/` (lihat `wrangler.toml` → `pages_build_output_dir`).
+
+---
+
 ## GitHub
 
-```bash
-cd /root/liang-kubur-sim
-git init
-git add .
-git commit -m "feat: simulasi liang kubur + CF Pages Functions"
-git branch -M main
-git remote add origin https://github.com/biru25/liang-kubur-sim.git
-git push -u origin main
-```
+Repo: https://github.com/biru25/liang-kubur-sim
 
-`.env` dan `node_modules` tidak ikut commit (lihat `.gitignore`).
+`.env` dan `node_modules` tidak ikut commit.
 
 ## Cloudflare Pages
 
@@ -26,49 +35,53 @@ git push -u origin main
 
 ### 1. Secret wajib
 
-Di Cloudflare dashboard → Workers & Pages → proyek → Settings → Environment variables:
+Dashboard → proyek → Settings → Environment variables → **Production**:
 
-- `DEEPGRAM_API_KEY` — **Production** (encrypted)
+- `DEEPGRAM_API_KEY` (encrypted)
 
-Opsional:
+Opsional: `DEEPGRAM_TTS_MODEL` (default di `wrangler.toml`: `aura-2-thalia-en`)
 
-- `DEEPGRAM_TTS_MODEL` — default di `wrangler.toml`: `aura-2-thalia-en` (ganti jika punya model Indo yang didukung Deepgram)
+### 2. Connect GitHub (disarankan)
 
-### 2. Deploy CLI
+Pages → **Connect to Git** → `biru25/liang-kubur-sim`, branch `main`:
+
+- Build command: kosong (atau `npm run pages:build`)
+- Output directory: **`public`**
+- **Jangan** isi Deploy command dengan `wrangler deploy`
+
+Setiap push `main` → auto-deploy.
+
+### 3. Deploy CLI (alternatif)
 
 ```bash
 npm install
-npx wrangler pages project create liang-kubur-sim --production-branch main
-export CLOUDFLARE_API_TOKEN=...   # dari dash.cloudflare.com/profile/api-tokens
-npx wrangler pages secret put DEEPGRAM_API_KEY
+export CLOUDFLARE_API_TOKEN=...   # token dengan Pages Edit
+npx wrangler pages secret put DEEPGRAM_API_KEY --project-name=liang-kubur-sim
 npm run deploy:cf
 ```
 
-`npm run deploy:cf` menjalankan `wrangler pages deploy .` (static dari `public/` + Functions).
+`deploy:cf` = **`wrangler pages deploy`** (bukan `wrangler deploy`).
 
-### 3. Connect GitHub (opsional)
+### 4. Link untuk teman
 
-Pages → Create project → Connect to Git → repo `biru25/liang-kubur-sim`:
+Setelah deploy sukses, bagikan:
 
-- Build command: *(kosong)*
-- Build output directory: `public`
-- Root directory: `/`
-- Tambah secret `DEEPGRAM_API_KEY` di dashboard
+`https://liang-kubur-sim.pages.dev` (atau custom domain di Pages)
 
-Setiap push ke `main` auto-deploy.
+Bukan link GitHub — teman buka URL web itu di browser.
 
-### 4. Verifikasi
+### 5. Verifikasi
 
 ```bash
 curl -s https://<your-pages>.pages.dev/api/health
 curl -s https://<your-pages>.pages.dev/api/backsound-status
 ```
 
-Buka situs → Mulai simulasi → backsound + suara malaikat + STT.
+Buka situs → Mulai simulasi → backsound + suara + STT.
 
 ## VPS (tetap)
 
 ```bash
-cp .env.example .env   # isi DEEPGRAM_API_KEY
-npm start              # port 3847, TTS Edge Gadis
+cp .env.example .env
+npm start   # port 3847, TTS Edge Gadis
 ```
