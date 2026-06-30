@@ -11,7 +11,21 @@ Kalau log Cloudflare berisi **Deploy command: `npx wrangler deploy`** → itu **
 | **Build command** | *(kosong)* atau `npm run pages:build` |
 | **Build output directory** | `public` |
 | **Root directory** | `/` |
-| **Deploy command** | **KOSONG / hapus** — jangan `wrangler deploy` |
+| **Deploy command** *(wajib di UI baru)* | **`npm run pages:deploy`** |
+
+Isi persis deploy command (satu baris):
+
+```text
+npm run pages:deploy
+```
+
+Atau tanpa npm script:
+
+```text
+npx wrangler pages deploy . --project-name=liang-kubur-sim --commit-dirty=true
+```
+
+**Jangan** pakai `npx wrangler deploy` (itu Workers, bukan Pages).
 
 Simpan → **Retry deployment**. Pages otomatis pakai folder `functions/` + static `public/` (lihat `wrangler.toml` → `pages_build_output_dir`).
 
