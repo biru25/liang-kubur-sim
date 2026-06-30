@@ -27,7 +27,33 @@ npx wrangler pages deploy . --project-name=liang-kubur-sim --commit-dirty=true
 
 **Jangan** pakai `npx wrangler deploy` (itu Workers, bukan Pages).
 
-Simpan → **Retry deployment**. Pages otomatis pakai folder `functions/` + static `public/` (lihat `wrangler.toml` → `pages_build_output_dir`).
+---
+
+## ⚠️ Build gagal: `Authentication error [code: 10000]` saat `pages:deploy`
+
+Log: *"API Token is read from the CLOUDFLARE_API_TOKEN environment variable"* → token di **Environment variables** proyek Pages **tidak punya izin Pages API** (atau token salah).
+
+**Langkah 1 (paling sering fix):**
+
+Workers & Pages → **liang-kubur-sim** → Settings → **Environment variables** → **hapus** (Production + Preview):
+
+- `CLOUDFLARE_API_TOKEN`
+- `CF_API_TOKEN`
+
+Jangan simpan token CF di env proyek kecuali token **custom** dengan izin lengkap. Build Git Pages punya kredensial internal; skrip `pages:deploy` sekarang **unset** token itu dulu (`env -u ...`).
+
+**Langkah 2:** Retry deployment. Deploy command tetap: `npm run pages:deploy`
+
+**Langkah 3 (kalau masih 10000):** Buat token baru https://dash.cloudflare.com/profile/api-tokens → **Custom token**:
+
+- Account → **Cloudflare Pages** → **Edit**
+- Account → **Workers Scripts** → **Edit** *(opsional, untuk Functions)*
+- Account Resources → akun kamu
+
+Lalu set **hanya** jika wrangler tetap butuh token manual:
+
+- `CLOUDFLARE_API_TOKEN` = token baru
+- `CLOUDFLARE_ACCOUNT_ID` = `e3c8765289b1bb60cdb2680f0834d7bb`
 
 ---
 

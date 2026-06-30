@@ -7,7 +7,7 @@
     "start": "node server.js",
     "dev": "node server.js",
     "pages:build": "node -e \"console.log('Cloudflare Pages: static public/ + functions/')\"",
-    "pages:deploy": "wrangler pages deploy . --project-name=liang-kubur-sim --commit-dirty=true",
+    "pages:deploy": "env -u CLOUDFLARE_API_TOKEN -u CF_API_TOKEN wrangler pages deploy . --project-name=liang-kubur-sim --commit-dirty=true",
     "deploy:cf": "npm run pages:deploy"
   },
   "dependencies": {
